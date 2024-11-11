@@ -1,6 +1,7 @@
 package br.com.samueltorga.spring.controller.exceptionhandler;
 
 import br.com.samueltorga.spring.controller.dto.ErrorResponse;
+import br.com.samueltorga.spring.exceptions.MaxPageSizeException;
 import br.com.samueltorga.spring.exceptions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,20 @@ public class GlobalExceptionHandler {
                                 .title("Resource not found")
                                 .detail(e.getMessage())
                                 .status(HttpStatus.NOT_FOUND)
+                                .timestamp(OffsetDateTime.now())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(MaxPageSizeException.class)
+    public ResponseEntity<ErrorResponse> handleException(MaxPageSizeException e) {
+        return ResponseEntity
+                .badRequest()
+                .body(
+                        ErrorResponse.builder()
+                                .title(e.getMessage())
+                                .detail(e.getMessage())
+                                .status(HttpStatus.BAD_REQUEST)
                                 .timestamp(OffsetDateTime.now())
                                 .build()
                 );
